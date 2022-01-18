@@ -28,10 +28,31 @@ calculate_colors <- function(try_word, true_word) {
 
   score <- rep('', length(v_try))
   score[green]  <- 'green'
-  score[yellow] <- 'yellow'
+  score[yellow] <- '#ffdb58'
   score[gray]   <- 'gray'
 
   names(score) <- v_try
 
   return(score)
+}
+
+
+score_column <- function(c_try, true_word, num_col) {
+
+  # Split true word into vector
+  v_tru <- unlist(strsplit(true_word, split = '')) %>% toupper()
+
+  #browser()
+  n_c_try <- NROW(c_try)
+  v_res <- rep('gray', n_c_try)
+
+  v_res <- dplyr::case_when(
+    c_try == v_tru[num_col]                      ~ 'green',
+    c_try != v_tru[num_col] & c_try %in% v_tru   ~ '#ffdb58',
+    is.character(c_try)                          ~ 'gray'
+  )
+
+
+  result <- list(values = c_try, colors = v_res)
+  return(result)
 }
