@@ -4,7 +4,7 @@ ui <- fluidPage(
   title = 'shksprwordl',
   shinyjs::useShinyjs(),
   tags$head(
-    tags$link(href = "style.css", rel = "stylesheet"),
+    tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
   ),
   titlePanel("Shksprwordl: A wordle clone with Shakespeare's words"),
   sidebarLayout(
@@ -12,8 +12,11 @@ ui <- fluidPage(
       fluidRow(
         column = 4,
         hr(),
-        p("Shksprwordl is a clone of the wordle game that uses",
-          "words from Shakespeare's plays.",br(),
+        p("Shksprwordl is a clone of the wordle game",
+          "that uses words from Shakespeare's plays.",br(),
+          "Words with apostrophe are valid, but it does", br(),
+          "count toward the letter count, e.g.,", br(),
+          strong("whoe'er"), "counts as 6 characters.",
           "The game uses the same color scoring as wordle:",br(),
           "green denotes characters in the correct position,",br(),
           "yellow denotes characters in the word but in the wrong position"),
@@ -51,13 +54,22 @@ server <- function(input, output, session) {
              p("Number of attempts:"),
              textOutput('numberAttempts'),
              shinyjs::hidden(
-               div(id = "gameover", title = "Result", width = '200px',
-                 span(p('GAME OVER'), style = 'color:red; fontSize:30px;'),
-                 hr(),
-                 p("The solution is:"),
-                 textOutput('solution')
+                div(id = "gameover", title = "Result", width = '200px',
+                  span(p('GAME OVER'), style = 'color:red; fontSize:30px;'),
+                  hr(),
+                  p("The solution is:"),
+                  textOutput('solution')
+                )
               )
-             )
+             # ,
+             #  shinyjs::hidden(
+             #    div(id = "youwon", title = "Result", width = '200px',
+             #        span(p('Congratulations, you won!'), style = 'color:red; fontSize:30px;'),
+             #        hr(),
+             #        p("The solution is:"),
+             #        textOutput('solution')
+             #    )
+             #  )
       ),
       column(6, dataTableOutput("table"))
     )
@@ -73,7 +85,6 @@ server <- function(input, output, session) {
 
   # select word
   true_word <- reactiveValues(word = '')
-
 
   attempts <- reactiveValues(countervalue = 0)
 
@@ -91,8 +102,14 @@ server <- function(input, output, session) {
                n_cols <- input$wordSize %>% as.numeric()
                short_list <- plays_tokens %>%
                  dplyr::filter(nchar == n_cols)
+
                # select one word at random
                true_word$word <- sample(short_list$word, 1)
+
+               # Remove '
+               true_word$word <- stringr::str_replace(string = true_word$word,
+                                                      pattern = "'",
+                                                      replacement = "")
 
                print(true_word$word)
 
@@ -118,7 +135,9 @@ server <- function(input, output, session) {
 
 
     # collect try word
-    try_word <- input$tryword
+    try_word <- stringr::str_replace(string = input$tryword,
+                                     pattern = "'",
+                                     replacement = "")
 
     # update counter
     attempts$countervalue <- attempts$countervalue + 1
@@ -129,11 +148,25 @@ server <- function(input, output, session) {
       dplyr::filter(nchar == n_cols)
 
     if (nchar(try_word) != as.numeric(input$wordSize) | !(try_word %in% short_list$word)) {
-      print(paste0('Error: try word should have ',as.numeric(input$wordSize),' characters.'))
+
+      if (nchar(try_word) != as.numeric(input$wordSize)) {
+        message_nchar <- paste0('Error: try word should have ',as.numeric(input$wordSize),' characters.')
+        print(message_nchar)
+      } else {
+        message_nchar <- ''
+      }
+      if (!(try_word %in% short_list$word)) {
+        message_dict <- paste0('Error: word ', try_word, ' is not in dictionary.')
+        print(message_dict)
+      } else {
+        message_dict <- ''
+      }
       showModal(modalDialog(
         div(tags$b("Invalid input:"),
             tags$br(),
-            tags$b("Wrong number of characters or word not in dictionary."),
+            tags$b(message_nchar),
+            tags$br(),
+            tags$b(message_dict),
             tags$br(),
             tags$b("Try again."),
             style = "color: red;"
@@ -173,23 +206,31 @@ server <- function(input, output, session) {
 
       #browser()
       # Update columns
-      for (i in 1:length(RV$data)) {
 
-        # Score current column
-        col_score <- score_column(RV$data[[i]], true_word$word, i)
+      # Score the entire data table
+      score_colors <- score_df(RV$data, true_word$word)
+
+      for (i in 1:length(RV$data)) {
 
         # Style current column
         ReDT$dt <- ReDT$dt %>%
           formatStyle(target = 'cell',
                       columns = names(RV$data)[i],
                       color = 'white',
-                      backgroundColor = styleEqual(col_score$values, col_score$colors),
+                      backgroundColor = styleEqual(RV$data[[i]], score_colors[[i]]),
                       border = '1px solid white' )
       }
     }
 
-
-
+    # Determine if game is over
+    if ((attempts$countervalue == as.numeric(input$trySize) &
+        try_word != true_word$word) |
+        (attempts$countervalue <= as.numeric(input$trySize) &
+         try_word == true_word$word)) {
+      # Number of attempts reached
+      shinyjs::show(id = 'gameover')
+      shinyjs::disable('submit')
+    }
 
   })
 
@@ -204,16 +245,6 @@ server <- function(input, output, session) {
   output$solution <- renderText(({
     toupper(true_word$word)
   }))
-
-  observeEvent(attempts$countervalue, {
-
-    if (attempts$countervalue == as.numeric(input$trySize)) {
-      # Number of attempts reached
-      shinyjs::show(id = 'gameover')
-      shinyjs::disable('submit')
-    }
-
-  })
 
 
 }

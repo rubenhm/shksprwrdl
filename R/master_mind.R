@@ -1,17 +1,6 @@
 # master_mind
 
-calculate_colors <- function(try_word, true_word) {
-
-  # Verify inputs
-  # browser()
-  # number of characters
-  if (nchar(try_word) != nchar(true_word)) {
-    stop('Input word is not the right number of characters')
-  }
-
-  # Split characters into vector
-  v_try <- unlist(strsplit(try_word, split = ''))
-  v_tru <- unlist(strsplit(true_word, split = ''))
+score_row <- function(v_try, v_tru) {
 
   # green
   green <- which(v_try == v_tru)
@@ -28,31 +17,43 @@ calculate_colors <- function(try_word, true_word) {
 
   score <- rep('', length(v_try))
   score[green]  <- 'green'
-  score[yellow] <- '#ffdb58'
+  score[yellow] <- '#fada5e'
   score[gray]   <- 'gray'
 
-  names(score) <- v_try
+  #names(score) <- v_try
 
   return(score)
 }
 
 
-score_column <- function(c_try, true_word, num_col) {
+score_df <- function(dt, true_word) {
 
+  #browser()
   # Split true word into vector
   v_tru <- unlist(strsplit(true_word, split = '')) %>% toupper()
 
-  #browser()
-  n_c_try <- NROW(c_try)
-  v_res <- rep('gray', n_c_try)
+  # Determine dimensions
+  n_cols <- length(dt)
+  n_rows <- NROW(dt)
 
-  v_res <- dplyr::case_when(
-    c_try == v_tru[num_col]                      ~ 'green',
-    c_try != v_tru[num_col] & c_try %in% v_tru   ~ '#ffdb58',
-    is.character(c_try)                          ~ 'gray'
-  )
+  # Initialize scores
+  df_res <- matrix(rep('gray', n_cols*n_rows), nrow = n_rows) %>%
+    tibble::as_tibble(.name_repair = 'unique')
 
 
-  result <- list(values = c_try, colors = v_res)
-  return(result)
+  # Score one row at a time and update df_res
+  for (i in c(1:n_rows)) {
+
+    # Current row
+    v_try <- unlist(dt[i,])
+
+    # score row
+    r_score <- score_row(v_try, v_tru)
+
+    # update v_res
+    df_res[i, ] <- as.list(r_score)
+
+  }
+
+  return(df_res)
 }

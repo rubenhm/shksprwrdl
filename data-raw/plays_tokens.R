@@ -16,10 +16,10 @@ tidy_plays <- plays_text %>%
 word_frequency <- tidy_plays %>%
   count(word, sort = TRUE)
 
-# Calculate number of characters
+# Calculate number of characters but ignore '
 word_frequency <-  word_frequency %>%
   mutate(
-    nchar = stringr::str_count(word)
+    nchar = stringr::str_count(word) - stringr::str_count(word, "'")
   )
 
 # Keep 5,6,7 letter words
@@ -34,8 +34,8 @@ wordset_small <- wordset %>%
   filter(n >= quant[1] & n <= quant[3])
 
 # Drop words with apostrophe
-wordset_small <- wordset_small %>%
-  filter(!stringr::str_detect(word, "'"))
+# wordset_small <- wordset_small %>%
+#   filter(!stringr::str_detect(word, "'"))
 
 # Sort
 wordset_small <- wordset_small %>%
