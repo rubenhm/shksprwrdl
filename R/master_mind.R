@@ -2,14 +2,14 @@
 
 score_row <- function(v_try, v_tru) {
 
-  # green
+  # green: exact matches
   green <- which(v_try == v_tru)
 
-  # yellow
-  yellow <- which(v_try %in% v_tru)
+  # yellow: imprecise matches
+  yellow <- which(v_try %in% dplyr::setdiff(v_tru, v_tru[green]))
 
-  # re-asses yellow
-  yellow <- dplyr::setdiff(yellow, green)
+  # TO DO: adjust yellow for repeated characters in v_try
+  #yellow <- dplyr::setdiff(yellow, green)
 
   # gray
   gray <- dplyr::setdiff(c(1:length(v_try)),
