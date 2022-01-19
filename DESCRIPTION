@@ -1,13 +1,27 @@
 Package: shksprwrdl
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Implementation of the 'wordle' game with Shakespeare's words
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: c(
+    person("Ruben", "Hernandez", , "ruben@rubenhm.org", role = c("aut", "cre"),
+    comment= c(ORCID="0000-0001-6474-9510"))
+    )
+URL: https://github.com/rubenhm/shksprwrdl
+Description: This is a clone of the 'wordle' game
+    https://www.powerlanguage.co.uk/wordle/  in R.
+    It uses words from Shakespeare's plays, except for the most common words.
+    The game allows for words with apostrophes.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends: 
     R (>= 2.10)
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Imports: 
+    dplyr,
+    tibble,
+    magrittr,
+    shiny,
+    shinyjs,
+    DT

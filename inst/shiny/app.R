@@ -61,15 +61,7 @@ server <- function(input, output, session) {
                   textOutput('solution')
                 )
               )
-             # ,
-             #  shinyjs::hidden(
-             #    div(id = "youwon", title = "Result", width = '200px',
-             #        span(p('Congratulations, you won!'), style = 'color:red; fontSize:30px;'),
-             #        hr(),
-             #        p("The solution is:"),
-             #        textOutput('solution')
-             #    )
-             #  )
+
       ),
       column(6, dataTableOutput("table"))
     )

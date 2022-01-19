@@ -1,5 +1,12 @@
-# master_mind
+# master_mind.R
 
+#' score_row
+#'
+#' Calculates score for a given guess word
+#'
+#' @param v_try Vectorized version of the guess word
+#' @param v_tru Vectorized version of the correct word
+#' @return A character vector of scores with the colors
 score_row <- function(v_try, v_tru) {
 
   # Scoring code from
@@ -26,7 +33,13 @@ score_row <- function(v_try, v_tru) {
   return(score)
 }
 
-
+#' score_df
+#'
+#' Calculates scores for the attempts data frame
+#'
+#' @param dt The attempts data frame
+#' @param true_word The word to be guessed
+#' @return A data frame of characters with scores (colors)
 score_df <- function(dt, true_word) {
 
   #browser()
