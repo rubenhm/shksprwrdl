@@ -2,25 +2,26 @@
 
 score_row <- function(v_try, v_tru) {
 
-  # green: exact matches
-  green <- which(v_try == v_tru)
+  # Scoring code from
+  # https://github.com/coolbutuseless/wordle/blob/main/R/wordle-game.R
+  exact   <- 2L * (v_try == v_tru)
+  inexact <- which(v_try != v_tru)
 
-  # yellow: imprecise matches
-  yellow <- which(v_try %in% dplyr::setdiff(v_tru, v_tru[green]))
-
-  # TO DO: adjust yellow for repeated characters in v_try
-  #yellow <- dplyr::setdiff(yellow, green)
-
-  # gray
-  gray <- dplyr::setdiff(c(1:length(v_try)),
-                         dplyr::union(green, yellow))
+  for (i in inexact) {
+    for (j in inexact) {
+      wrong_spot = v_try[i] == v_tru[j]
+      if (wrong_spot) {
+        exact[i] <- 1L
+        inexact <- inexact[inexact != j]
+        break
+      }
+    }
+  }
 
   score <- rep('', length(v_try))
-  score[green]  <- 'green'
-  score[yellow] <- '#fada5e'
-  score[gray]   <- 'gray'
-
-  #names(score) <- v_try
+  score[exact == 2]  <- '#689111' # green
+  score[exact == 1]  <- '#E3AE1E' # yellow
+  score[exact == 0]  <- '#615F5B' # gray
 
   return(score)
 }

@@ -12,11 +12,11 @@ ui <- fluidPage(
       fluidRow(
         column = 4,
         hr(),
-        p("Shksprwordl is a clone of the wordle game",
+        p("Shksprwordl is a clone of the wordle game",br(),
           "that uses words from Shakespeare's plays.",br(),
-          "Words with apostrophe are valid, but it does", br(),
-          "count toward the letter count, e.g.,", br(),
-          strong("whoe'er"), "counts as 6 characters.",
+          "Words with apostrophes are valid,", br(),
+          "but it doesn't count toward the letter count,", br(),
+          "e.g., ",strong("whoe'er"), "counts as 6 characters.", br(),
           "The game uses the same color scoring as wordle:",br(),
           "green denotes characters in the correct position,",br(),
           "yellow denotes characters in the word but in the wrong position"),
@@ -123,7 +123,7 @@ server <- function(input, output, session) {
                  formatStyle(target = 'cell',
                              columns = names(RV$data),
                              color = 'white',
-                             backgroundColor = 'gray',
+                             backgroundColor = '#615F5B',
                              border = '1px solid white' )
 
               })
@@ -201,7 +201,8 @@ server <- function(input, output, session) {
         formatStyle(target = 'cell',
                     columns = names(RV$data),
                     color = 'white',
-                    backgroundColor = 'gray',
+                    fontWeight = 'bold',
+                    backgroundColor = '#615F5B',
                     border = '1px solid white' )
 
       #browser()
@@ -217,6 +218,7 @@ server <- function(input, output, session) {
           formatStyle(target = 'cell',
                       columns = names(RV$data)[i],
                       color = 'white',
+                      fontWeight = 'bold',
                       backgroundColor = styleEqual(RV$data[[i]], score_colors[[i]]),
                       border = '1px solid white' )
       }

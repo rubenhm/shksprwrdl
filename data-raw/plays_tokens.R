@@ -27,15 +27,11 @@ wordset <- word_frequency %>%
   filter(nchar %in% c(5,6,7))
 
 # quantiles of freq distribution
-quant <- quantile(wordset$n, c(0.75, 0.95, 0.995))
+quant <- quantile(wordset$n, c(0.75, 0.95, 0.9995))
 
 # Choose words that are in the above set
 wordset_small <- wordset %>%
   filter(n >= quant[1] & n <= quant[3])
-
-# Drop words with apostrophe
-# wordset_small <- wordset_small %>%
-#   filter(!stringr::str_detect(word, "'"))
 
 # Sort
 wordset_small <- wordset_small %>%
