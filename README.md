@@ -4,24 +4,27 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-`shksprwrdl` is a `wordle  clone that uses words from
-Shakespeare's plays.
+`shksprwrdl` is a `wordle`  clone that uses words from Shakespeare's 37 plays.
+Text originally available in `xml` format from:
+<http://www.ibiblio.org/xml/examples/shakespeare/>
 
 ## Installation
 
-You can install the development version of shksprwrdl from [GitHub](https://github.com/) with:
+You can install the development version of `shksprwrdl` from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("rubenhm/shksprwrdl")
 ```
 
-## Example
+## Usage
 
-This is a basic example which shows you how to solve a common problem:
 
 ``` r
+# load package
 library(shksprwrdl)
-## basic example code
+
+# launch shiny app
+launch_app()
 ```
 
