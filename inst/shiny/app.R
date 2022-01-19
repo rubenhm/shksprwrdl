@@ -107,12 +107,12 @@ server <- function(input, output, session) {
 
                # Initialize results matrix
                ReDT$dt <- RV$data %>%
-                 datatable(rownames = TRUE, colnames = rep('', length(RV$data)),
+                 DT::datatable(rownames = TRUE, colnames = rep('', length(RV$data)),
                            class = 'cell-border',
                            # https://stackoverflow.com/questions/35624413/remove-search-option-but-leave-search-columns-option
                            options = list(dom = 't',
                                           pageLength = as.numeric(input$trySize))) %>%
-                 formatStyle(target = 'cell',
+                 DT::formatStyle(target = 'cell',
                              columns = names(RV$data),
                              color = 'white',
                              backgroundColor = '#615F5B',
@@ -184,13 +184,13 @@ server <- function(input, output, session) {
       # Update datatable
       # browser()
       ReDT$dt <- RV$data %>%
-        datatable(rownames = TRUE, colnames = rep('', length(RV$data)),
+        DT::datatable(rownames = TRUE, colnames = rep('', length(RV$data)),
                   class = 'cell-border',
                   # https://stackoverflow.com/questions/35624413/remove-search-option-but-leave-search-columns-option
                   options = list(dom = 't',
                                  pageLength = as.numeric(input$trySize))
         ) %>%
-        formatStyle(target = 'cell',
+        DT::formatStyle(target = 'cell',
                     columns = names(RV$data),
                     color = 'white',
                     fontWeight = 'bold',
@@ -207,7 +207,7 @@ server <- function(input, output, session) {
 
         # Style current column
         ReDT$dt <- ReDT$dt %>%
-          formatStyle(target = 'cell',
+          DT::formatStyle(target = 'cell',
                       columns = names(RV$data)[i],
                       color = 'white',
                       fontWeight = 'bold',

@@ -1,4 +1,10 @@
-data('plays_tokens.rda')
+library(shiny)
+library(shinyjs)
+library(dplyr)
+library(DT)
+
+
+data('plays_tokens')
 
 #source('../../R/master_mind.R')
 
