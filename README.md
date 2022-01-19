@@ -28,3 +28,10 @@ library(shksprwrdl)
 launch_app()
 ```
 
+
+## Download and run from GitHub
+
+```r
+shiny::runUrl("https://github.com/rubenhm/shksprwrdl/archive/master.tar.gz",
+  subdir = "inst/shiny/")
+```
