@@ -3,7 +3,7 @@ Type: Package
 Title: Implementation of the 'wordle' game with Shakespeare's words
 Version: 0.1.0
 Authors@R: c(
-    person("Ruben", "Hernandez", , "ruben@rubenhm.org", role = c("aut", "cre"),
+    person("Ruben", "Hernandez Murillo", , "ruben@rubenhm.org", role = c("aut", "cre"),
     comment= c(ORCID="0000-0001-6474-9510"))
     )
 URL: https://github.com/rubenhm/shksprwrdl
